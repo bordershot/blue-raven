@@ -31,7 +31,7 @@ class WeMonitorWriter(Subject, Observer):
         data = self.preamble() + message + self.postamble()
         r = requests.post(self.API_PREFIX, data=data)
         if r.status_code >= 300:
-            sys.stderr.write("Error:" + r.content + "\n")
+            sys.stderr.write("Error: " + r.content + "\n")
         self.notify("status = " + str(r.status_code) + " " + r.content + "\n" + data)
 
     def preamble(self):
