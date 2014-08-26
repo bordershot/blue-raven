@@ -24,15 +24,37 @@ class WeMonitorWriter(Subject, Observer):
         self.rainforest_mac_id = rainforest_mac_id
         
     API_PREFIX='https://app.wemonitorhome.com/api/rainforest-eagle'
+    MAX_RETRIES=5
 
     # support for observer
 
     def update(self, subject, message):
-        data = self.preamble() + message + self.postamble()
-        r = requests.post(self.API_PREFIX, data=data)
+        body = self.preamble() + message + self.postamble()
+        self.post_with_retries(self.API_PREFIX, body)
+
+    def post_with_retries(self, url, body):
+        retries = 0
+        while(True):
+            try:
+                self.try_post(url, body)
+                break
+            except ConnectionError as e:
+                if (retries >= MAX_RETRIES):
+                    raise
+                sleep_time = self.make_holdoff_time(retries)
+                print "Retrying ConnectionError({0}: {1}) in {2} seconds".format(e.errno, e.strerror, sleep_time)
+                time.sleep(sleep_time)
+                retries += 1
+
+    def try_post(self, url, body):
+        r = requests.post(url, data=body)
+        msg = str(r.status_code) + " " + r.content + "\n"
         if r.status_code >= 300:
-            sys.stderr.write("Error: " + r.content + "\n")
-        self.notify("status = " + str(r.status_code) + " " + r.content + "\n" + data)
+            sys.stderr.write("POST returned error: " + msg)
+        self.notify(msg + body)
+
+    def make_holdoff_time(self, retries):
+        return 2**(retries * 2)
 
     def preamble(self):
         return ('<?xml version="1.0"?>\n'
