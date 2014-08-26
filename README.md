@@ -43,27 +43,8 @@ Traceback (most recent call last):
 ConnectionError: HTTPSConnectionPool(host='app.wemonitorhome.com', port=443): Max retries exceeded with url: /api/rainforest-eagle (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
 ```
 
-### Don't compile in Rainforest Mac Id
+### Rename raven-cosm
 
-Currently, the Rainforest Mac Id is compiled into
-`lib/we_monitor_driver.py`.  It should come from the command line, or
-even better, extracted automatically from the `<DeviceMacId>` tag.
-
-### Handle incomplete USB packets better
-
-When the USB driver first starts up, it produces incomplete XML
-fragments which are peppered with null characters.  It sorts itself
-out after an indeterminate amount of time.  Since it's unlikely we'll
-be able to directly fix the USB driver, we need an effective means to
-ignore incomplete fragments.
-
-Our current approach is simply to ignore the first 40 packets from the
-USB driver (see skipper.py), but often that's too many (and sometimes,
-not enough).  We need a better approach, perhaps by detecting nulls in
-the packets.
-
-### Rename rainforest-cosm
-
-The original rainforest-cosm repository was created to push data to 
-COSM cloud service.  Since its main function has changed to push data
-to the weMonitor servers, we should consider renaming the repository.
+The original raven-cosm repository was created to push data to COSM
+cloud service.  Since its main function has changed to push data to
+the weMonitor servers, we should consider renaming the repository.
