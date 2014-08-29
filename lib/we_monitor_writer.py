@@ -38,7 +38,7 @@ class WeMonitorWriter(Subject, Observer):
             try:
                 self.try_post(url, body)
                 break
-            except ConnectionError as e:
+            except requests.ConnectionError as e:
                 if (retries >= MAX_RETRIES):
                     raise
                 sleep_time = self.make_holdoff_time(retries)
@@ -50,7 +50,7 @@ class WeMonitorWriter(Subject, Observer):
         r = requests.post(url, data=body)
         msg = str(r.status_code) + " " + r.content + "\n"
         if r.status_code >= 300:
-            sys.stderr.write("POST returned error: " + msg)
+            sys.stderr.write("Error: POST returned " + msg)
         self.notify(msg + body)
 
     def make_holdoff_time(self, retries):
