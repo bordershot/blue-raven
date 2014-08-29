@@ -39,7 +39,7 @@ class WeMonitorWriter(Subject, Observer):
                 self.try_post(url, body)
                 break
             except requests.ConnectionError as e:
-                if (retries >= MAX_RETRIES):
+                if (retries >= self.MAX_RETRIES):
                     raise
                 sleep_time = self.make_holdoff_time(retries)
                 print "Retrying ConnectionError({0}: {1}) in {2} seconds".format(e.errno, e.strerror, sleep_time)
