@@ -21,27 +21,20 @@
 #   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   ================================================================
 
-from subject import *
-from observer import *
+import usbio
+import echo
+import xml_tag_extractor
+import datapoint_extractor
+import cosm_writer
 
-class Skipper(Subject, Observer):
-    """Skip the first N packets received.  Thereafter, forward all
-    packets."""
+usb = usbio.USBIO()
+idx = xml_tag_extractor.XMLTagExtractor("InstantaneousDemand")
+dpx = datapoint_extractor.DatapointExtractor()
+cos = cosm_writer.CosmWriter()
+ech = echo.Echo()
 
-    def __init__(self, packets_to_skip):
-        Subject.__init__(self)
-        Observer.__init__(self)
-        self.packets_to_skip = packets_to_skip
-
-    # support for observer
-
-    def update(self, subject, message):
-        if (self.packets_to_skip <= 0):
-            self.notify(message)
-        else:
-            self.packets_to_skip -= 1
-            print("skipping: " + message)
-
-
-
+# usb.attach(idx).attach(dpx).attach(cos).attach(ech)
+usb.attach(ech).attach(idx).attach(dpx).attach(cos)
+usb.start()
+usb.thread.join()
 
