@@ -5,23 +5,23 @@ import sys
 import datetime
 
 # Push a message to the weMonitor API service for Rainforest Eagle
-# messages.  Each message should be a complete XML fragment, e.g.
+# messages.  It receives complete XML fragments, such as:
+#
 # <?xml version="1.0"?>
-# <rainForest macId="0x0000d8d5b9000348" version="undefined" timestamp="1373335064s">
-# <InstantaneousDemand>
-#   <DeviceMacId>0xd8d5b90000000c9c</DeviceMacId>
-#   ...
-# </InstantaneousDemand>
-#
-# As a convenience, the message is echoed to any listener attached
-# to the WeMonitorWriter object (e.g. for logging or debugging).
-#
+# <rainforest macId="0x0000d8d5b9000348" version="undefined" timestamp="1373335064s">
+#   <InstantaneousDemand>
+#     <DeviceMacId>0x00158d00001ab152</DeviceMacId>
+#     <MeterMacId>0x000781000028c07d</MeterMacId>
+#     <TimeStamp>0x1918513b</TimeStamp>
+#     ...
+#   </InstantaneousDemand>
+# </rainforest>
+
 class WeMonitorWriter(Subject, Observer):
 
-    def __init__(self, rainforest_mac_id):
+    def __init__(self):
         Subject.__init__(self)
         Observer.__init__(self)
-        self.rainforest_mac_id = rainforest_mac_id
         
     API_PREFIX='https://app.wemonitorhome.com/api/rainforest-eagle'
     MAX_RETRIES=5
@@ -29,8 +29,7 @@ class WeMonitorWriter(Subject, Observer):
     # support for observer
 
     def update(self, subject, message):
-        body = self.preamble() + message + self.postamble()
-        self.post_with_retries(self.API_PREFIX, body)
+        self.post_with_retries(self.API_PREFIX, message)
 
     def post_with_retries(self, url, body):
         retries = 0
@@ -55,22 +54,4 @@ class WeMonitorWriter(Subject, Observer):
 
     def make_holdoff_time(self, retries):
         return 2**(retries * 2)
-
-    def preamble(self):
-        return ('<?xml version="1.0"?>\n'
-                '<rainforest'
-                ' macId="' + self.rainforest_mac_id + '"'
-                ' version="undefined"'
-                ' timestamp="' + str(self.seconds_since_1970()) + 's">\n')
-
-    def postamble(self):
-        return ('</rainforest>\n')
-
-    def unix_time(self, dt):
-        epoch = datetime.datetime.utcfromtimestamp(0)
-        delta = dt - epoch
-        return delta.total_seconds()
-
-    def seconds_since_1970(self):
-        return int(round(self.unix_time(datetime.datetime.now())))
 
