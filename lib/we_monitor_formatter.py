@@ -39,24 +39,30 @@ class WeMonitorFormatter(Subject, Observer):
     # support for observer
 
     def update(self, subject, message):
-        mac_id, timestamp = extract_attributes(message)
-        if ((mac_id != None) && (timestamp == None)):
+        mac_id, timestamp = self.extract_attributes(message)
+        if ((mac_id != None) and (timestamp != None)):
             m = self.preamble(message, mac_id, timestamp) + message + self.postamble()
             self.notify(m)
 
-    # mac_id and timestamp are hex strings
+    SECONDS_BETWEEN_2000_AND_1970 = 946684800
+
+    # mac_id and timestamp are hex strings.  Note that timestamp refers to 
+    # the number of seconds since 2000.  The preamble requires the number 
+    # of seconds since 1970, so some conversion is required.
     def preamble(self, message, mac_id, timestamp):
+        seconds_since_epoch = int(timestamp, 16) + self.SECONDS_BETWEEN_2000_AND_1970
         return ('<?xml version="1.0"?>\n'
                 '<rainforest'
                 ' macId="' + mac_id + '"'
                 ' version="undefined"'
-                ' timestamp="' + str(int(timestamp, 16)) + 's">\n')
+                ' timestamp="' + str(seconds_since_epoch) + 's">\n')
 
     def postamble(self):
         return ('</rainforest>\n')
 
     # Extracts DeviceMacId and TimeStamp and returns them as hex
-    # strings
+    # strings.  Note that TimeStamp is expressed as the number of
+    # seconds since Jan 1, 2000
     def extract_attributes(self, xml):
         tree = ET.fromstring(xml)
         mac_id = tree.find('DeviceMacId')

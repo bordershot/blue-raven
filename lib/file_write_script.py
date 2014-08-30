@@ -16,7 +16,7 @@ import file_writer
 import usbio
 
 def usage(argv):
-    sys.exit("USAGE:\n    python " + argv[0] + " file_name.xml\n")
+    sys.exit("USAGE:\n    python " + sys.argv[0] + " file_name.xml\n")
 
 if len(sys.argv) != 2:
     usage(sys.argv)
@@ -24,12 +24,12 @@ if len(sys.argv) != 2:
 # Allocate an element that broadcasts raw Rainforest packets
 usb = usbio.USBIO()
 
-print("writing XML output to " + argv[1])
+print("writing XML output to " + sys.argv[1])
 
 # Allocate an element that collects bits of XML until a complete XML
 # fragment (<tag>...</tag>) has been assembled.  Then broadcast the
 # fragment as a single message to its listeners.
-fw = file_writer.FileWriter(argv[1])
+fw = file_writer.FileWriter(sys.argv[1])
 
 # For debugging, allocate an element that simply echos its input
 # to stdout.
