@@ -21,6 +21,16 @@
 #   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   ================================================================
 
+"""Subject is the publish half of a publish / subscribe framework.  A Subject has a
+set of Observers.  A call to subject.notify(msg) generates a call to 
+observer.update(subject, msg) in each of the observers.  Message passing is thread
+safe.
+
+To associate an observer with the sender, call sender.attach(observer).  As
+a convenience, attach() returns the observer, so creating a chain of connections is
+as simple as s1.attach(s2).attach(s3).attach(s4)
+"""
+
 class Subject:
 
     def __init__(self):
