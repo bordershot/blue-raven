@@ -23,6 +23,10 @@
 
 import threading
 
+"""Observer is the subscriber half of a publish / subscribe framework.  Upon a call
+to subject.notify(msg), each observer is called with observer.update(subject, msg).
+
+In order to be useful, the Observer class must be subclassed."""
 class Observer:
 
     def __init__(self):
