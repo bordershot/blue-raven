@@ -25,7 +25,7 @@ from subject import *
 from observer import *
 import requests
 import sys
-import datetime
+import time
 
 # Push a message to the weMonitor API service for Rainforest Eagle
 # messages.  It receives complete XML fragments, such as:

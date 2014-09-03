@@ -87,11 +87,17 @@ class WeMonitorFormatter(Subject, Observer):
     # strings.  Note that TimeStamp is expressed as the number of
     # seconds since Jan 1, 2000
     def extract_attributes(self, xml):
-        tree = ET.fromstring(xml)
-        mac_id = tree.find('DeviceMacId')
-        timestamp = tree.find('TimeStamp')
-        return (mac_id.text if mac_id != None else None,
-                timestamp.text if timestamp != None else None)
+        try:
+            tree = ET.fromstring(xml)
+            mac_id = tree.find('DeviceMacId')
+            timestamp = tree.find('TimeStamp')
+            return (mac_id.text if mac_id != None else None,
+                    timestamp.text if timestamp != None else None)
+        except ET.ParseError as e:
+            # Recover from malformed XML
+            print "XML ParseError:{0} (ignoring...)".format(e)
+            return (None, None)
+
 
 
 
