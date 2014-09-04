@@ -64,7 +64,7 @@ class WeMonitorWriter(Subject, Observer):
                 if (retries >= self.MAX_RETRIES):
                     raise
                 sleep_time = self.make_holdoff_time(retries)
-                print "Retrying ConnectionError({0}: {1}) in {2} seconds".format(e.errno, e.strerror, sleep_time)
+                print "Retrying ConnectionError({0}) in {1} seconds".format(e, sleep_time)
                 time.sleep(sleep_time)
                 retries += 1
 
