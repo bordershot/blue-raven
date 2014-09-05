@@ -21,25 +21,30 @@
 #   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   ================================================================
 
+"""The Tap() object captures the most recent message in lastMessage()
+before relaying it to any Observers.  Primarily used for debugging."""
+
 from subject import *
 from observer import *
 import sys
 
-class FileWriter(Subject, Observer):
+class Tap(Subject, Observer):
 
-    def __init__(self, file_name):
+    def __init__(self):
         Subject.__init__(self)
         Observer.__init__(self)
-        self.file_name = file_name
+        self.message = ""
 
     # support for observer
 
-    # by using 'a' (append) mode, we flush the output after each
-    # write, which is probably the preferred behavior.
     def update(self, subject, message):
-        with open(self.file_name, 'a') as f:
-            f.write(message)
+        self.message += message
         self.notify(message)
 
+    def lastMessage(self):
+        return self.message
+
+    def clearMessage(self):
+        self.message = ""
 
 

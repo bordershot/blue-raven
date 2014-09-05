@@ -65,7 +65,7 @@ class XMLFragmentCollector(Subject, Observer):
         if not(m): return
         # here: m.group(1) is everything upto and including </tag_name>,
         # m.group(2) is anything following it.
-        self.notify(m.group(1) + "\n")
+        self.notify(m.group(1))
         self.collected = m.group(2)
         self.state = 0
 

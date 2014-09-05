@@ -25,7 +25,7 @@ from subject import *
 from observer import *
 
 class Skipper(Subject, Observer):
-    """Skip the first N packets received.  Thereafter, forward all
+    """Skip the first N messages received.  Thereafter, forward all
     packets."""
 
     def __init__(self, packets_to_skip):
@@ -40,7 +40,6 @@ class Skipper(Subject, Observer):
             self.notify(message)
         else:
             self.packets_to_skip -= 1
-            print("skipping: " + message)
 
 
 

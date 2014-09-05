@@ -1,33 +1,68 @@
-# Test WeMonitorFormatter's ability to catch malformed fragments
-# Synopsis:
-#  python spec/test_we_monitor_formatter.py log/faulty.xml
+#   ================================================================
+#   Copyright (C) 2014 weMonitor, Inc.
+#  
+#   Permission is hereby granted, free of charge, to any person obtaining
+#   a copy of this software and associated documentation files (the
+#   "Software"), to deal in the Software without restriction, including
+#   without limitation the rights to use, copy, modify, merge, publish,
+#   distribute, sublicense, and/or sell copies of the Software, and to
+#   permit persons to whom the Software is furnished to do so, subject to
+#   the following conditions:
+#  
+#   The above copyright notice and this permission notice shall be
+#   included in all copies or substantial portions of the Software.
+#  
+#   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+#   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+#   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+#   NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+#   LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+#   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+#   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#   ================================================================
 
-import sys
-import time
-
-import echo
-import file_reader
+import unittest
+from test_helpers import captured_output
 import we_monitor_formatter
-import xml_fragment_collector
+import tap
 
-def usage(argv):
-    sys.exit("USAGE:\n    python " + sys.argv[0] + "test_filename\n")
+class TestWeMonitorFormatter(unittest.TestCase):
 
-if len(sys.argv) != 2:
-    usage(sys.argv)
+    def testGoodMessage(self):
+        wmf = we_monitor_formatter.WeMonitorFormatter()
+        slp_ = tap.Tap()
+        wmf.attach(slp_)
 
-# Allocate an element that broadcasts raw Rainforest packets
-filename = sys.argv[1]
+        message = """<woof>
+  <DeviceMacId>0x00158d00001ab152</DeviceMacId>
+  <MeterMacId>0x000781000028c07d</MeterMacId>
+  <TimeStamp>0x191868fb</TimeStamp>
+</woof>"""
 
-fr = file_reader.FileReader(filename)
-xfc = xml_fragment_collector.XMLFragmentCollector()
-wmf = we_monitor_formatter.WeMonitorFormatter()
-ech = echo.Echo()
+        wmf.update(None, message)
+        observed = slp_.lastMessage()
+        self.assertRegexpMatches(observed, 'xml version=')
+        self.assertRegexpMatches(observed, 'rainforest macId=')
+        self.assertRegexpMatches(observed, 'version="undefined"')
+        self.assertRegexpMatches(observed, 'timestamp=')
+        self.assertRegexpMatches(observed, 'DeviceMacId')
 
-# String the elements together and start the reader thread.
-fr.attach(xfc).attach(wmf).attach(ech)
+    def testMalformedMessage(self):
+        wmf = we_monitor_formatter.WeMonitorFormatter()
+        slp_ = tap.Tap()
+        wmf.attach(slp_)
 
-# Start the reader thread
-fr.start()
-# Here at end of file (or some errror)
-fr.thread.join()
+        message = """<woof>
+  <DeviceMacId>0x00158d00001ab152</DeviceMacId>
+  <MeterMacId>0x000781000028c07d</MeterMacId>
+  <TimeStamp>0x191868fb</TimeStamp>
+asdf<#saywhat?>
+</woof>"""
+
+        with captured_output() as (out, err):
+            wmf.update(None, message)
+        observed = slp_.lastMessage()
+        self.assertEqual(observed, '')
+        # In the future, this wll be logged, not sent to stdout
+        stdobserved = out.getvalue()
+        self.assertRegexpMatches(stdobserved, 'XML ParseError')

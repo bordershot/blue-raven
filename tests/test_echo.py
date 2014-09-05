@@ -21,25 +21,17 @@
 #   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   ================================================================
 
-from subject import *
-from observer import *
-import sys
+import unittest
+from test_helpers import captured_output
+import echo
 
-class FileWriter(Subject, Observer):
+class TestEcho(unittest.TestCase):
 
-    def __init__(self, file_name):
-        Subject.__init__(self)
-        Observer.__init__(self)
-        self.file_name = file_name
-
-    # support for observer
-
-    # by using 'a' (append) mode, we flush the output after each
-    # write, which is probably the preferred behavior.
-    def update(self, subject, message):
-        with open(self.file_name, 'a') as f:
-            f.write(message)
-        self.notify(message)
-
-
+    def testUpdate(self):
+        ech = echo.Echo()
+        expected = "blind pig"
+        with captured_output() as (out, err):
+            ech.update(None, expected)
+        observed = out.getvalue()
+        self.assertEqual(expected, observed)
 

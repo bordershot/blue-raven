@@ -21,25 +21,37 @@
 #   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   ================================================================
 
-from subject import *
-from observer import *
-import sys
+import unittest
+import file_reader
+import tap
 
-class FileWriter(Subject, Observer):
+def create_file(filename, text):
+    with open(filename, "w") as f:
+        f.write(text)
 
-    def __init__(self, file_name):
-        Subject.__init__(self)
-        Observer.__init__(self)
-        self.file_name = file_name
+class TestFileReader(unittest.TestCase):
 
-    # support for observer
+    def test01(self):
+        # create a file for testing
+        filename = "/tmp/test_file_reader_01.txt"
+        expected = """a
+b
+c
+d"""
+        create_file(filename, expected)
 
-    # by using 'a' (append) mode, we flush the output after each
-    # write, which is probably the preferred behavior.
-    def update(self, subject, message):
-        with open(self.file_name, 'a') as f:
-            f.write(message)
-        self.notify(message)
+        # now see if we can read it back using FileReader
+        fr = file_reader.FileReader(filename)
 
+        # Collect output in a tap_ object
+        tap_ = tap.Tap()
+        fr.attach(tap_)
 
+        # Start the file reader thread, wait for it to end
+        fr.start()
+        fr.thread.join()
+
+        # See if tap accumulated the expected string
+        observed = tap_.lastMessage()
+        self.assertEqual(expected, observed)
 

@@ -21,25 +21,16 @@
 #   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   ================================================================
 
-from subject import *
-from observer import *
 import sys
+from contextlib import contextmanager
+from StringIO import StringIO
 
-class FileWriter(Subject, Observer):
-
-    def __init__(self, file_name):
-        Subject.__init__(self)
-        Observer.__init__(self)
-        self.file_name = file_name
-
-    # support for observer
-
-    # by using 'a' (append) mode, we flush the output after each
-    # write, which is probably the preferred behavior.
-    def update(self, subject, message):
-        with open(self.file_name, 'a') as f:
-            f.write(message)
-        self.notify(message)
-
-
-
+@contextmanager
+def captured_output():
+    new_out, new_err = StringIO(), StringIO()
+    old_out, old_err = sys.stdout, sys.stderr
+    try:
+        sys.stdout, sys.stderr = new_out, new_err
+        yield sys.stdout, sys.stderr
+    finally:
+        sys.stdout, sys.stderr = old_out, old_err

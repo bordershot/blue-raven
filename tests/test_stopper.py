@@ -21,25 +21,38 @@
 #   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   ================================================================
 
-from subject import *
-from observer import *
-import sys
+import unittest
+import stopper
+import file_reader
+import tap
 
-class FileWriter(Subject, Observer):
+def create_file(filename, text):
+    with open(filename, "w") as f:
+        f.write(text)
 
-    def __init__(self, file_name):
-        Subject.__init__(self)
-        Observer.__init__(self)
-        self.file_name = file_name
+class TestStopper(unittest.TestCase):
 
-    # support for observer
+    def testUpdate(self):
+        filename = "/tmp/test_stopper_01.txt"
+        written = """a
+b
+c
+d
+e
+"""
+        create_file(filename, written)
 
-    # by using 'a' (append) mode, we flush the output after each
-    # write, which is probably the preferred behavior.
-    def update(self, subject, message):
-        with open(self.file_name, 'a') as f:
-            f.write(message)
-        self.notify(message)
+        file_reader_ = file_reader.FileReader(filename)
+        stp_ = stopper.Stopper(file_reader_, 3)
+        tap_ = tap.Tap()
+        file_reader_.attach(stp_).attach(tap_)
 
+        file_reader_.start()
+        file_reader_.thread.join()
 
-
+        expected = """a
+b
+c
+"""
+        observed = tap_.lastMessage()
+        self.assertEqual(expected, observed)

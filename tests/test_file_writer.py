@@ -21,25 +21,33 @@
 #   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   ================================================================
 
-from subject import *
-from observer import *
-import sys
+import unittest
+import file_writer
+import os
 
-class FileWriter(Subject, Observer):
+def remove_file(filename):
+    try:
+        os.remove(filename)
+    except OSError:
+        pass
 
-    def __init__(self, file_name):
-        Subject.__init__(self)
-        Observer.__init__(self)
-        self.file_name = file_name
+def read_file(filename):
+    with open(filename, "r") as f:
+        return f.read()
 
-    # support for observer
+class TestFileWriter(unittest.TestCase):
 
-    # by using 'a' (append) mode, we flush the output after each
-    # write, which is probably the preferred behavior.
-    def update(self, subject, message):
-        with open(self.file_name, 'a') as f:
-            f.write(message)
-        self.notify(message)
+    def test01(self):
+        filename = "/tmp/test_file_writer_01.txt"
+        remove_file(filename)     # make sure file is gone
+        expected = """a
+b
+c
+d"""
+        fw = file_writer.FileWriter(filename)
+        fw.update(None, expected)
+        observed = read_file(filename)
 
-
+        # See if tap accumulated the expected string
+        self.assertEqual(expected, observed)
 

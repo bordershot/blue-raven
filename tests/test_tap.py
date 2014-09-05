@@ -21,25 +21,24 @@
 #   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   ================================================================
 
-from subject import *
-from observer import *
-import sys
+import unittest
+import tap
 
-class FileWriter(Subject, Observer):
+class TestTap(unittest.TestCase):
 
-    def __init__(self, file_name):
-        Subject.__init__(self)
-        Observer.__init__(self)
-        self.file_name = file_name
+    def testUpdate(self):
+        tap_ = tap.Tap()
+        expected = "blind pig"
+        tap_.update(None, expected)
+        observed = tap_.lastMessage()
+        self.assertEqual(expected, observed)
 
-    # support for observer
-
-    # by using 'a' (append) mode, we flush the output after each
-    # write, which is probably the preferred behavior.
-    def update(self, subject, message):
-        with open(self.file_name, 'a') as f:
-            f.write(message)
-        self.notify(message)
-
-
+    def testMultiUpdate(self):
+        tap_ = tap.Tap()
+        tap_.update(None, "blind ")
+        self.assertEqual("blind ", tap_.lastMessage())
+        tap_.update(None, "pig")
+        self.assertEqual("blind pig", tap_.lastMessage())
+        tap_.clearMessage()
+        self.assertEqual("", tap_.lastMessage())
 

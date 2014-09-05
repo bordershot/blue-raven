@@ -21,25 +21,51 @@
 #   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   ================================================================
 
+import unittest
+import tap
 from subject import *
-from observer import *
-import sys
 
-class FileWriter(Subject, Observer):
+class SampleSubject(Subject):
+    pass
 
-    def __init__(self, file_name):
-        Subject.__init__(self)
-        Observer.__init__(self)
-        self.file_name = file_name
+class TestSubject(unittest.TestCase):
 
-    # support for observer
+    def testVanillaNotify(self):
+        subject_ = SampleSubject()
+        tap_ = tap.Tap()
+        subject_.attach(tap_)
 
-    # by using 'a' (append) mode, we flush the output after each
-    # write, which is probably the preferred behavior.
-    def update(self, subject, message):
-        with open(self.file_name, 'a') as f:
-            f.write(message)
-        self.notify(message)
+        expected = """a
+b
+c
+"""
+        subject_.notify(expected)
+        observed = tap_.lastMessage()
+        self.assertEqual(expected, observed)
 
+    def testDoubleAttach(self):
+        subject_ = SampleSubject()
+        tap_ = tap.Tap()
+        subject_.attach(tap_)
+        subject_.attach(tap_)   # should only attach once
+        expected = """a
+b
+c
+"""
+        subject_.notify(expected)
+        observed = tap_.lastMessage()
+        self.assertEqual(expected, observed)
 
+    def testDetach(self):
+        subject_ = SampleSubject()
+        tap_ = tap.Tap()
+        subject_.attach(tap_)
+        subject_.detach(tap_)
+        expected = """a
+b
+c
+"""
+        subject_.notify(expected)
+        observed = tap_.lastMessage()
+        self.assertEqual("", observed)
 

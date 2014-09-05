@@ -39,11 +39,8 @@ class Stopper(Subject, Observer):
 
     # support for observer
 
-    # by using 'a' (append) mode, we flush the output after each
-    # write, which is probably the preferred behavior.
     def update(self, subject, message):
+        self.n_packets -= 1
         if (self.n_packets <= 0):
             self.obj.stop()
-        else:
-            self.n_packets -= 1
         self.notify(message)
