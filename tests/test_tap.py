@@ -29,15 +29,15 @@ class TestTap(unittest.TestCase):
     def testUpdate(self):
         tap_ = tap.Tap()
         expected = "blind pig"
-        tap_.update(None, expected)
+        tap_.update(expected)
         observed = tap_.lastMessage()
         self.assertEqual(expected, observed)
 
     def testMultiUpdate(self):
         tap_ = tap.Tap()
-        tap_.update(None, "blind ")
+        tap_.update("blind ")
         self.assertEqual("blind ", tap_.lastMessage())
-        tap_.update(None, "pig")
+        tap_.update("pig")
         self.assertEqual("blind pig", tap_.lastMessage())
         tap_.clearMessage()
         self.assertEqual("", tap_.lastMessage())

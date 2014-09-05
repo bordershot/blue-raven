@@ -24,7 +24,7 @@
 import threading
 
 """Observer is the subscriber half of a publish / subscribe framework.  Upon a call
-to subject.notify(msg), each observer is called with observer.update(subject, msg).
+to subject.notify(msg), each observer is called with observer.update(msg).
 
 In order to be useful, the Observer class must be subclassed."""
 class Observer:
@@ -32,7 +32,7 @@ class Observer:
     def __init__(self):
         self.lock = threading.RLock()
 
-    def update(self, subject, message):
+    def update(self, message):
         raise NotImplementedError("must subclass me")
 
 

@@ -56,7 +56,7 @@ class DatapointExtractor(Subject, Observer):
         Subject.__init__(self)
         Observer.__init__(self)
 
-    def update(self, subject, message):
+    def update(self, message):
         self.process_xml(message)
 
     def process_xml(self, message):

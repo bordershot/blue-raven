@@ -61,7 +61,7 @@ class WeMonitorFormatter(Subject, Observer):
         
     # support for observer
 
-    def update(self, subject, message):
+    def update(self, message):
         mac_id, timestamp = self.extract_attributes(message)
         if ((mac_id != None) and (timestamp != None)):
             m = self.preamble(message, mac_id, timestamp) + message + self.postamble()

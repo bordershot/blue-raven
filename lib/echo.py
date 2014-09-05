@@ -33,7 +33,7 @@ class Echo(Subject, Observer):
 
     # support for observer
 
-    def update(self, subject, message):
+    def update(self, message):
         print message,
         sys.stdout.flush()
         self.notify(message)

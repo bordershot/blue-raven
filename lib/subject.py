@@ -23,7 +23,7 @@
 
 """Subject is the publish half of a publish / subscribe framework.  A Subject has a
 set of Observers.  A call to subject.notify(msg) generates a call to 
-observer.update(subject, msg) in each of the observers.  Message passing is thread
+observer.update(msg) in each of the observers.  Message passing is thread
 safe.
 
 To associate an observer with the sender, call sender.attach(observer).  As
@@ -40,7 +40,7 @@ class Subject:
         for observer in self.observers:
             try:
                 observer.lock.acquire()
-                observer.update(self, message)
+                observer.update(message)
             finally:
                 observer.lock.release()
 

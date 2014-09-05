@@ -51,7 +51,7 @@ class WeMonitorWriter(Subject, Observer):
 
     # support for observer
 
-    def update(self, subject, message):
+    def update(self, message):
         self.post_with_retries(self.API_PREFIX, message)
 
     def post_with_retries(self, url, body):

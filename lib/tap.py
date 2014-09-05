@@ -37,7 +37,7 @@ class Tap(Subject, Observer):
 
     # support for observer
 
-    def update(self, subject, message):
+    def update(self, message):
         self.message += message
         self.notify(message)
 

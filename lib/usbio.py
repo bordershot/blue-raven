@@ -42,7 +42,7 @@ class USBIO(Subject, Observer):
 
     # support for observer
 
-    def update(self, subject, message):
+    def update(self, message):
         self.serial.write(message)
 
     # support for threading

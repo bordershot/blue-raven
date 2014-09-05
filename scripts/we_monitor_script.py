@@ -75,13 +75,13 @@ usb.attach(xfc).attach(wmf).attach(wmw).attach(ech)
 # XML output -- without that, it sends an arbitrary number of partial
 # packets and lots of nulls.  (The initialize message also elicits an
 # "Unknown command" response, but that appears to be benign.)
-usb.update(usb, commands.initialize())
+usb.update(commands.initialize())
 
 # Start the reader thread
 usb.start()
 # Send a GET_DEVICE_INFO message to get a DeviceInfo response.
 time.sleep(1)
-usb.update(usb, commands.get_device_info())
+usb.update(commands.get_device_info())
 
 # Should never get here...
 usb.thread.join()

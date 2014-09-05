@@ -39,7 +39,7 @@ class Stopper(Subject, Observer):
 
     # support for observer
 
-    def update(self, subject, message):
+    def update(self, message):
         self.n_packets -= 1
         if (self.n_packets <= 0):
             self.obj.stop()

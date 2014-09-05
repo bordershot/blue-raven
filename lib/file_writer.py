@@ -36,7 +36,7 @@ class FileWriter(Subject, Observer):
 
     # by using 'a' (append) mode, we flush the output after each
     # write, which is probably the preferred behavior.
-    def update(self, subject, message):
+    def update(self, message):
         with open(self.file_name, 'a') as f:
             f.write(message)
         self.notify(message)

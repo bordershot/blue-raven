@@ -45,7 +45,7 @@ b
 c
 d"""
         fw = file_writer.FileWriter(filename)
-        fw.update(None, expected)
+        fw.update(expected)
         observed = read_file(filename)
 
         # See if tap accumulated the expected string

@@ -35,7 +35,7 @@ class Skipper(Subject, Observer):
 
     # support for observer
 
-    def update(self, subject, message):
+    def update(self, message):
         if (self.packets_to_skip <= 0):
             self.notify(message)
         else:

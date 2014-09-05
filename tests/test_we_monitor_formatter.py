@@ -39,7 +39,7 @@ class TestWeMonitorFormatter(unittest.TestCase):
   <TimeStamp>0x191868fb</TimeStamp>
 </woof>"""
 
-        wmf.update(None, message)
+        wmf.update(message)
         observed = slp_.lastMessage()
         self.assertRegexpMatches(observed, 'xml version=')
         self.assertRegexpMatches(observed, 'rainforest macId=')
@@ -60,7 +60,7 @@ asdf<#saywhat?>
 </woof>"""
 
         with captured_output() as (out, err):
-            wmf.update(None, message)
+            wmf.update(message)
         observed = slp_.lastMessage()
         self.assertEqual(observed, '')
         # In the future, this wll be logged, not sent to stdout

@@ -32,19 +32,19 @@ class TestXMLFragmentCollector(unittest.TestCase):
         tap_ = tap.Tap()
         xml_fragment_collector_.attach(tap_)
 
-        xml_fragment_collector_.update(None, "<woof>\n")
+        xml_fragment_collector_.update("<woof>\n")
         self.assertEqual("", tap_.lastMessage())
 
-        xml_fragment_collector_.update(None, "<DeviceMacId>0x00158d00001ab152</DeviceMacId>\n")
+        xml_fragment_collector_.update("<DeviceMacId>0x00158d00001ab152</DeviceMacId>\n")
         self.assertEqual("", tap_.lastMessage())
 
-        xml_fragment_collector_.update(None, "<MeterMacId>0x000781000028c07d</MeterMacId>\n")
+        xml_fragment_collector_.update("<MeterMacId>0x000781000028c07d</MeterMacId>\n")
         self.assertEqual("", tap_.lastMessage())
 
-        xml_fragment_collector_.update(None, "<TimeStamp>0x191868fb</TimeStamp>\n")
+        xml_fragment_collector_.update("<TimeStamp>0x191868fb</TimeStamp>\n")
         self.assertEqual("", tap_.lastMessage())
 
-        xml_fragment_collector_.update(None, "</woof>\n")
+        xml_fragment_collector_.update("</woof>\n")
         expected = """<woof>
 <DeviceMacId>0x00158d00001ab152</DeviceMacId>
 <MeterMacId>0x000781000028c07d</MeterMacId>
@@ -58,19 +58,19 @@ class TestXMLFragmentCollector(unittest.TestCase):
         tap_ = tap.Tap()
         xml_fragment_collector_.attach(tap_)
 
-        xml_fragment_collector_.update(None, "<woof>")
+        xml_fragment_collector_.update("<woof>")
         self.assertEqual("", tap_.lastMessage())
 
-        xml_fragment_collector_.update(None, "<DeviceMacId>0x00158d00001ab152</DeviceMacId>")
+        xml_fragment_collector_.update("<DeviceMacId>0x00158d00001ab152</DeviceMacId>")
         self.assertEqual("", tap_.lastMessage())
 
-        xml_fragment_collector_.update(None, "<MeterMacId>0x000781000028c07d</MeterMacId>")
+        xml_fragment_collector_.update("<MeterMacId>0x000781000028c07d</MeterMacId>")
         self.assertEqual("", tap_.lastMessage())
 
-        xml_fragment_collector_.update(None, "<TimeStamp>0x191868fb</TimeStamp>")
+        xml_fragment_collector_.update("<TimeStamp>0x191868fb</TimeStamp>")
         self.assertEqual("", tap_.lastMessage())
 
-        xml_fragment_collector_.update(None, "</woof>")
+        xml_fragment_collector_.update("</woof>")
         expected = ("<woof>"
                     "<DeviceMacId>0x00158d00001ab152</DeviceMacId>"
                     "<MeterMacId>0x000781000028c07d</MeterMacId>"

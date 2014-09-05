@@ -31,7 +31,7 @@ class TestEcho(unittest.TestCase):
         ech = echo.Echo()
         expected = "blind pig"
         with captured_output() as (out, err):
-            ech.update(None, expected)
+            ech.update(expected)
         observed = out.getvalue()
         self.assertEqual(expected, observed)
 

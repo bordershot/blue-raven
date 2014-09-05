@@ -45,7 +45,7 @@ class XMLFragmentCollector(Subject, Observer):
 
     # support for observer
 
-    def update(self, subject, message):
+    def update(self, message):
         self.collected += message
         # print("collected = " + self.collected)
 

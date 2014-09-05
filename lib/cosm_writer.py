@@ -39,7 +39,7 @@ class CosmWriter(Subject, Observer):
 
     # support for observer
 
-    def update(self, subject, message):
+    def update(self, message):
         body = {"datapoints":[message]}
         r = requests.post(self.API_PREFIX + '/feeds/' + self.FEED_ID + '/datastreams/1/datapoints.json',
                           data=json.dumps(body),

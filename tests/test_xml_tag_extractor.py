@@ -32,19 +32,19 @@ class TestXMLFragmentCollector(unittest.TestCase):
         tap_ = tap.Tap()
         xml_tag_extractor_.attach(tap_)
 
-        xml_tag_extractor_.update(None, "<woof>\n")
+        xml_tag_extractor_.update("<woof>\n")
         self.assertEqual("", tap_.lastMessage())
 
-        xml_tag_extractor_.update(None, "<DeviceMacId>0x00158d00001ab152</DeviceMacId>\n")
+        xml_tag_extractor_.update("<DeviceMacId>0x00158d00001ab152</DeviceMacId>\n")
         self.assertEqual("", tap_.lastMessage())
 
-        xml_tag_extractor_.update(None, "<MeterMacId>0x000781000028c07d</MeterMacId>\n")
+        xml_tag_extractor_.update("<MeterMacId>0x000781000028c07d</MeterMacId>\n")
         self.assertEqual("", tap_.lastMessage())
 
-        xml_tag_extractor_.update(None, "<TimeStamp>0x191868fb</TimeStamp>\n")
+        xml_tag_extractor_.update("<TimeStamp>0x191868fb</TimeStamp>\n")
         self.assertEqual("<TimeStamp>0x191868fb</TimeStamp>", tap_.lastMessage())
 
-        xml_tag_extractor_.update(None, "</woof>\n")
+        xml_tag_extractor_.update("</woof>\n")
         self.assertEqual("<TimeStamp>0x191868fb</TimeStamp>", tap_.lastMessage())
 
 
@@ -53,18 +53,18 @@ class TestXMLFragmentCollector(unittest.TestCase):
         tap_ = tap.Tap()
         xml_tag_extractor_.attach(tap_)
 
-        xml_tag_extractor_.update(None, "<woof>")
+        xml_tag_extractor_.update("<woof>")
         self.assertEqual("", tap_.lastMessage())
 
-        xml_tag_extractor_.update(None, "<DeviceMacId>0x00158d00001ab152</DeviceMacId>")
+        xml_tag_extractor_.update("<DeviceMacId>0x00158d00001ab152</DeviceMacId>")
         self.assertEqual("", tap_.lastMessage())
 
-        xml_tag_extractor_.update(None, "<MeterMacId>0x000781000028c07d</MeterMacId>")
+        xml_tag_extractor_.update("<MeterMacId>0x000781000028c07d</MeterMacId>")
         self.assertEqual("", tap_.lastMessage())
 
-        xml_tag_extractor_.update(None, "<TimeStamp>0x191868fb</TimeStamp>")
+        xml_tag_extractor_.update("<TimeStamp>0x191868fb</TimeStamp>")
         self.assertEqual("<TimeStamp>0x191868fb</TimeStamp>", tap_.lastMessage())
 
-        xml_tag_extractor_.update(None, "</woof>\n")
+        xml_tag_extractor_.update("</woof>\n")
         self.assertEqual("<TimeStamp>0x191868fb</TimeStamp>", tap_.lastMessage())
 

@@ -44,7 +44,7 @@ class XMLTagExtractor(Subject, Observer):
 
     # support for observer
 
-    def update(self, subject, message):
+    def update(self, message):
         self.process_input(message)
 
     # ================================================================
