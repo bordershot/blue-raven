@@ -73,7 +73,8 @@ class WeMonitorWriter(Subject, Observer):
         msg = str(r.status_code) + " " + r.content + "\n"
         if r.status_code >= 300:
             sys.stderr.write("Error: POST returned " + msg)
-        self.notify(msg + body)
+        # self.notify(msg + body)
+        self.notify(msg)
 
     def make_holdoff_time(self, retries):
         return 2**(retries * 2)
