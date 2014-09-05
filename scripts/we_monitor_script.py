@@ -26,7 +26,7 @@ Driver script to read from a Rainforest Automation RAVEN smart meter
 interface and push the data to the weMonitor Rainforest API.
 
 SYNOPSIS:
-    nohup python we_monitor_script.py
+    PYTHONPATH=./lib nohup python scripts/we_monitor_script.py &
 """
 
 import sys
