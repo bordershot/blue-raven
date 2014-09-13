@@ -22,40 +22,11 @@
 #   ================================================================
 
 import unittest
-import file_writer
-import os
+import observer
 
-def remove_file(filename):
-    try:
-        os.remove(filename)
-    except OSError:
-        pass
+class TestObserver(unittest.TestCase):
 
-def read_file(filename):
-    with open(filename, "r") as f:
-        return f.read()
-
-class TestFileWriter(unittest.TestCase):
-
-    def test01(self):
-        filename = "/tmp/test_file_writer_01.txt"
-        remove_file(filename)     # make sure file is gone
-        expected = """a
-b
-c
-d"""
-        fw = file_writer.FileWriter(filename)
-        fw.update(expected)
-        observed = read_file(filename)
-
-        # See if tap accumulated the expected string
-        self.assertEqual(expected, observed)
-
-    def test02(self):
-        filename = "/tmp/test_file_writer_impossible.txt"
-        # This doesn't test the lib module at all.  Rather,
-        # it tests the remove_file() test helper method.
-        # 
-        # make sure second call does not generate an error
-        remove_file(filename)
-        self.assertIsNone(remove_file(filename))
+    def testUpdate(self):
+        obs = observer.Observer()
+        with self.assertRaises(NotImplementedError):
+           obs.update("woof")

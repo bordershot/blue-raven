@@ -21,10 +21,13 @@
 #   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   ================================================================
 
+import sys
+
+print sys.path
+
 from subject import *
 from observer import *
 import requests
-import sys
 import time
 
 # Push a message to the weMonitor API service for Rainforest Eagle
@@ -73,7 +76,6 @@ class WeMonitorWriter(Subject, Observer):
         msg = str(r.status_code) + " " + r.content + "\n"
         if r.status_code >= 300:
             sys.stderr.write("Error: POST returned " + msg)
-        # self.notify(msg + body)
         self.notify(msg)
 
     def make_holdoff_time(self, retries):

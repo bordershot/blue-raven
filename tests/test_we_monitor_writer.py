@@ -21,12 +21,50 @@
 #   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   ================================================================
 
+from we_monitor_writer import WeMonitorWriter
+from test_helpers import captured_output
+import mock
 import unittest
-import we_monitor_writer
+import requests
 
 class TestWeMonitorWriter(unittest.TestCase): 
-    # This is a placeholder until I can figure out how to sensibly
-    # mock the requests module
-    pass
+    
+    @mock.patch('we_monitor_writer.requests.post')
+    def test_successful_write(self, mock_post):
+        xml_frag = """<InstantaneousDemand></InstantaneousDemand>"""
+
+        response = mock.MagicMock()
+        response.status_code = 200
+        response.content = "OK"
+        mock_post.return_value = response
+
+        writer = WeMonitorWriter()
+        writer.update(xml_frag)
+        self.assertTrue(mock_post.called, "Failed to call requests.post")
+
+    @mock.patch('we_monitor_writer.requests.post')
+    def test_failing_write(self, mock_post):
+        xml_frag = """<InstantaneousDemand></InstantaneousDemand>"""
+
+        response = mock.MagicMock()
+        response.status_code = 403
+        response.content = "Forbidden"
+        mock_post.return_value = response
+
+        writer = WeMonitorWriter()
+        with captured_output() as (out, err):
+            writer.update(xml_frag)
+        observed = err.getvalue()
+        self.assertRegexpMatches(observed, 'Error')
+
+    @mock.patch('we_monitor_writer.time.sleep')
+    @mock.patch('we_monitor_writer.requests.post')
+    def test_one_connection_error(self, mock_post, mock_sleep):
+        xml_frag = """<InstantaneousDemand></InstantaneousDemand>"""
+
+        mock_post.side_effect = requests.ConnectionError("whoops")
+        writer = WeMonitorWriter()
+        with self.assertRaises(requests.ConnectionError):
+            writer.update(xml_frag)
 
 
