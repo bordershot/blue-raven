@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PYTHON=/Users/r/Developer/Quince/usr/bin/python
+PYTHON=python
 export PYTHONPATH='./lib'
 ${PYTHON} -m unittest discover tests
 
