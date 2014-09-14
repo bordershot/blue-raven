@@ -47,7 +47,8 @@ if len(sys.argv) != 1:
     usage(sys.argv)
 
 # configure syslog
-syslog.openlog(ident="raven-cosm")
+syslog.openlog(ident="raven-cosm", logoption=syslog.LOG_PID)
+syslog.syslog(syslog.LOG_INFO, 'starting up')
 
 # Allocate an element that broadcasts raw Rainforest packets
 usb = usbio.USBIO()
@@ -82,6 +83,7 @@ usb.attach(xfc).attach(wmf).attach(wmw) # .attach(ech)
 usb.update(commands.initialize())
 
 # Start the reader thread
+syslog.syslog(syslog.LOG_INFO, 'launching reader thread')
 usb.start()
 # Send a GET_DEVICE_INFO message to get a DeviceInfo response.
 time.sleep(1)
