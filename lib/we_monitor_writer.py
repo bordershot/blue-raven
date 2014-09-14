@@ -23,12 +23,11 @@
 
 import sys
 
-print sys.path
-
 from subject import *
 from observer import *
 import requests
 import time
+import syslog
 
 # Push a message to the weMonitor API service for Rainforest Eagle
 # messages.  It receives complete XML fragments, such as:
@@ -67,7 +66,7 @@ class WeMonitorWriter(Subject, Observer):
                 if (retries >= self.MAX_RETRIES):
                     raise
                 sleep_time = self.make_holdoff_time(retries)
-                print "Retrying ConnectionError({0}) in {1} seconds".format(e, sleep_time)
+                syslog.syslog(syslog.LOG_ERR, "Retrying ConnectionError({0}) in {1} seconds".format(e, sleep_time))
                 time.sleep(sleep_time)
                 retries += 1
 
@@ -75,7 +74,7 @@ class WeMonitorWriter(Subject, Observer):
         r = requests.post(url, data=body)
         msg = str(r.status_code) + " " + r.content + "\n"
         if r.status_code >= 300:
-            sys.stderr.write("Error: POST returned " + msg)
+            syslog.syslog(syslog.LOG_ERR, "POST returned " + msg)
         self.notify(msg)
 
     def make_holdoff_time(self, retries):

@@ -42,8 +42,9 @@ class TestWeMonitorWriter(unittest.TestCase):
         writer.update(xml_frag)
         self.assertTrue(mock_post.called, "Failed to call requests.post")
 
+    @mock.patch('we_monitor_writer.syslog.syslog')
     @mock.patch('we_monitor_writer.requests.post')
-    def test_failing_write(self, mock_post):
+    def test_failing_write(self, mock_post, mock_syslog):
         xml_frag = """<InstantaneousDemand></InstantaneousDemand>"""
 
         response = mock.MagicMock()
@@ -52,14 +53,14 @@ class TestWeMonitorWriter(unittest.TestCase):
         mock_post.return_value = response
 
         writer = WeMonitorWriter()
-        with captured_output() as (out, err):
-            writer.update(xml_frag)
-        observed = err.getvalue()
-        self.assertRegexpMatches(observed, 'Error')
+        writer.update(xml_frag)
+        observed_arg = mock_syslog.call_args[0][1]
+        self.assertRegexpMatches(observed_arg, 'Forbidden')
 
+    @mock.patch('we_monitor_writer.syslog.syslog')
     @mock.patch('we_monitor_writer.time.sleep')
     @mock.patch('we_monitor_writer.requests.post')
-    def test_one_connection_error(self, mock_post, mock_sleep):
+    def test_one_connection_error(self, mock_post, mock_sleep, mock_syslog):
         xml_frag = """<InstantaneousDemand></InstantaneousDemand>"""
 
         mock_post.side_effect = requests.ConnectionError("whoops")
@@ -67,4 +68,5 @@ class TestWeMonitorWriter(unittest.TestCase):
         with self.assertRaises(requests.ConnectionError):
             writer.update(xml_frag)
 
-
+        observed_arg = mock_syslog.call_args[0][1]
+        self.assertRegexpMatches(observed_arg, 'ConnectionError')

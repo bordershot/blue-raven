@@ -24,6 +24,7 @@
 from subject import *
 from observer import *
 import xml.etree.ElementTree as ET
+import syslog
 
 # Format an XML fragment for sending to the WeMonitor API service for
 # the Rainforest Eagle.  It receives complete XML fragments, such as:
@@ -95,7 +96,7 @@ class WeMonitorFormatter(Subject, Observer):
                     timestamp.text if timestamp != None else None)
         except ET.ParseError as e:
             # Recover from malformed XML
-            print "XML ParseError:{0} (ignoring...)".format(e)
+            syslog.syslog(syslog.LOG_NOTICE, "XML ParseError:{0} (ignoring...)".format(e))
             return (None, None)
 
 

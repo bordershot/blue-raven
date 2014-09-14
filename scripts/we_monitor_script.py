@@ -31,6 +31,7 @@ SYNOPSIS:
 
 import sys
 import time
+import syslog
 
 import commands
 import echo
@@ -44,6 +45,9 @@ def usage(argv):
 
 if len(sys.argv) != 1:
     usage(sys.argv)
+
+# configure syslog
+syslog.openlog(ident="raven-cosm")
 
 # Allocate an element that broadcasts raw Rainforest packets
 usb = usbio.USBIO()
@@ -62,10 +66,10 @@ wmw = we_monitor_writer.WeMonitorWriter()
 
 # For debugging, allocate an element that simply echos its input
 # to stdout.
-ech = echo.Echo()
+# ech = echo.Echo()
 
 # String the elements together and start the reader thread.
-usb.attach(xfc).attach(wmf).attach(wmw).attach(ech)
+usb.attach(xfc).attach(wmf).attach(wmw) # .attach(ech)
 
 # If you prefer to see the raw XML as it arrives from the USB
 # device. comment out the above line and uncomment this line.

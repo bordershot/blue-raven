@@ -47,7 +47,6 @@ class XMLFragmentCollector(Subject, Observer):
 
     def update(self, message):
         self.collected += message
-        # print("collected = " + self.collected)
 
         if (self.state == 0):
             # searching for <tag_name>...

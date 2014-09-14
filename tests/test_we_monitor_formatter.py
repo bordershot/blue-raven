@@ -21,10 +21,11 @@
 #   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   ================================================================
 
-import unittest
 from test_helpers import captured_output
-import we_monitor_formatter
 import tap
+import we_monitor_formatter
+import mock
+import unittest
 
 class TestWeMonitorFormatter(unittest.TestCase):
 
@@ -47,7 +48,8 @@ class TestWeMonitorFormatter(unittest.TestCase):
         self.assertRegexpMatches(observed, 'timestamp=')
         self.assertRegexpMatches(observed, 'DeviceMacId')
 
-    def testMalformedMessage(self):
+    @mock.patch('we_monitor_formatter.syslog.syslog')
+    def testMalformedMessage(self, mock_syslog):
         wmf = we_monitor_formatter.WeMonitorFormatter()
         slp_ = tap.Tap()
         wmf.attach(slp_)
@@ -58,11 +60,11 @@ class TestWeMonitorFormatter(unittest.TestCase):
   <TimeStamp>0x191868fb</TimeStamp>
 asdf<#saywhat?>
 </woof>"""
+        # make the call
+        wmf.update(message)
 
-        with captured_output() as (out, err):
-            wmf.update(message)
         observed = slp_.lastMessage()
         self.assertEqual(observed, '')
-        # In the future, this wll be logged, not sent to stdout
-        stdobserved = out.getvalue()
-        self.assertRegexpMatches(stdobserved, 'XML ParseError')
+
+        observed_arg = mock_syslog.call_args[0][1]
+        self.assertRegexpMatches(observed_arg, 'XML ParseError')
