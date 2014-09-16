@@ -57,16 +57,19 @@ class TestWeMonitorWriter(unittest.TestCase):
         observed_arg = mock_syslog.call_args[0][1]
         self.assertRegexpMatches(observed_arg, 'Forbidden')
 
+    @mock.patch('we_monitor_writer.os.system')
     @mock.patch('we_monitor_writer.syslog.syslog')
     @mock.patch('we_monitor_writer.time.sleep')
     @mock.patch('we_monitor_writer.requests.post')
-    def test_one_connection_error(self, mock_post, mock_sleep, mock_syslog):
+    def test_one_connection_error(self, mock_post, mock_sleep, mock_syslog, mock_system):
         xml_frag = """<InstantaneousDemand></InstantaneousDemand>"""
 
         mock_post.side_effect = requests.ConnectionError("whoops")
+        mock_system.return_value = 0
+
         writer = WeMonitorWriter()
         with self.assertRaises(requests.ConnectionError):
             writer.update(xml_frag)
 
         observed_arg = mock_syslog.call_args[0][1]
-        self.assertRegexpMatches(observed_arg, 'ConnectionError')
+        self.assertRegexpMatches(observed_arg, 'ping')

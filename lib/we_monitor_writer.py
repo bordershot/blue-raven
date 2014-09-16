@@ -25,6 +25,7 @@ import sys
 
 from subject import *
 from observer import *
+import os
 import requests
 import time
 import syslog
@@ -50,6 +51,7 @@ class WeMonitorWriter(Subject, Observer):
         
     API_PREFIX='https://app.wemonitorhome.com/api/rainforest-eagle'
     MAX_RETRIES=5
+    KNOWN_GOOD_HOST='8.8.8.8'
 
     # support for observer
 
@@ -66,7 +68,8 @@ class WeMonitorWriter(Subject, Observer):
                 if (retries >= self.MAX_RETRIES):
                     raise
                 sleep_time = self.make_holdoff_time(retries)
-                syslog.syslog(syslog.LOG_ERR, "Retrying ConnectionError({0}) in {1} seconds".format(e, sleep_time))
+                syslog.syslog(syslog.LOG_ERR, "{0}: retry in {1} seconds".format(e, sleep_time))
+                self.probe_known_host()
                 time.sleep(sleep_time)
                 retries += 1
 
@@ -80,3 +83,11 @@ class WeMonitorWriter(Subject, Observer):
     def make_holdoff_time(self, retries):
         return 2**(retries * 2)
 
+    # If connection timed out trying to communicate with weMonitor
+    # server, it would be useful to know if it was the weMonitor
+    # server becoming unavailable or an interruption to the local
+    # network.  So we probe a known good host.
+    def probe_known_host(self):
+        cmd = 'ping -c 1 -W 2 {0}'.format(self.KNOWN_GOOD_HOST)
+        ret = os.system(cmd)
+        syslog.syslog(syslog.LOG_ERR, '{0} returned {1}'.format(cmd, ret))
