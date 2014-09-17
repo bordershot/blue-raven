@@ -28,32 +28,16 @@ import mock
 class TestRavenUtilities(unittest.TestCase): 
     
     @staticmethod
-    def persevered_fn_01():
+    def logged_fn_01():
         raise RuntimeError("whoops!")
 
-    @staticmethod
-    def concede_after(n):
-        n = [n]
-        def conceder():
-            if (n[0] > 0):
-                n[0] -= 1
-                return False
-            else:
-                return True
-        return conceder
-    
     @mock.patch('we_monitor_writer.syslog.syslog')
-    def test_with_perseverance_should_retry_and_log(self, mock_syslog):
-        n = 3
+    def test_with_exceptions_logged(self, mock_syslog):
         with self.assertRaises(RuntimeError):
-            raven_utilities.with_perseverance(TestRavenUtilities.persevered_fn_01, 
-                                              TestRavenUtilities.concede_after(n))
+            with raven_utilities.exceptions_logged():
+                TestRavenUtilities.logged_fn_01()
 
-        self.assertEqual(mock_syslog.call_count, n+1)
-        # yuck.  what's the correct way to extract the arg?
-        for i in range(n + 1):
-            expected = "retrying" if (i < n) else "giving up"
-            self.assertRegexpMatches(mock_syslog.call_args_list[i][0][0], expected)
+        self.assertEqual(mock_syslog.call_count, 1)
 
 
 

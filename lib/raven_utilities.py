@@ -22,18 +22,17 @@
 #   ================================================================
 
 import syslog
+from contextlib import contextmanager
 
-def with_perseverance(body, concede_predicate):
-    while (True):
-        try:
-            body()
-        except Exception, e:
-            if (concede_predicate()):
-                log_exception(e, "giving up")
-                raise
-            else:
-                log_exception(e, "retrying")
+@contextmanager
+def exceptions_logged():
+    try:
+        yield
+    except Exception, e:
+        log_exception(e)
+        raise
+            
+def log_exception(e):
+    syslog.syslog(e.message)
 
-def log_exception(e, suffix):
-    syslog.syslog(e.message + ": (" + suffix + ")")
 
