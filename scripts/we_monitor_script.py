@@ -33,6 +33,7 @@ import sys
 import time
 import syslog
 
+import raven_utilities
 import commands
 import echo
 import usbio
@@ -76,18 +77,33 @@ usb.attach(xfc).attach(wmf).attach(wmw) # .attach(ech)
 # device. comment out the above line and uncomment this line.
 # usb.attach(xfc).attach(ech).attach(wmf).attach(wmw)
 
-# Sending an 'initialize' message causes the RAVEn to synchronize its
-# XML output -- without that, it sends an arbitrary number of partial
-# packets and lots of nulls.  (The initialize message also elicits an
-# "Unknown command" response, but that appears to be benign.)
-usb.update(commands.initialize())
+def toplevel():
+    # Sending an 'initialize' message causes the RAVEn to synchronize its
+    # XML output -- without that, it sends an arbitrary number of partial
+    # packets and lots of nulls.  (The initialize message also elicits an
+    # "Unknown command" response, but that appears to be benign.)
+    usb.update(commands.initialize())
+    
+    # Start the reader thread
+    syslog.syslog(syslog.LOG_INFO, 'launching reader thread')
+    usb.start()
+    # Send a GET_DEVICE_INFO message to get a DeviceInfo response.
+    time.sleep(1)
+    usb.update(commands.get_device_info())
+    
+    # Should never get here...
+    usb.thread.join()
 
-# Start the reader thread
-syslog.syslog(syslog.LOG_INFO, 'launching reader thread')
-usb.start()
-# Send a GET_DEVICE_INFO message to get a DeviceInfo response.
-time.sleep(1)
-usb.update(commands.get_device_info())
+def concede_after(n):
+    n = [n]
+    def conceder():
+        if (n[0] > 0):
+            n[0] -= 1
+            return False
+        else:
+            return True
+    return conceder
+    
+# here's where it all really starts...
+raven_utilities.with_perseverance(toplevel, concede_after(5))
 
-# Should never get here...
-usb.thread.join()
