@@ -7,12 +7,6 @@ stream-based architecture/
 
 ## TODO
 
-### rename the repo
-
-Once upon a time, this repository was for pushing RAVEn data to the
-cosm.com API.  It no longer serves that purpose, so it would be
-appropriate to rename the repository.
-
 ### add documentation
 
 Figure out how Python apps are documented and add appropriate comments
