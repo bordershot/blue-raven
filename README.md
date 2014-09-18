@@ -28,3 +28,14 @@ see https://wiki.debian.org/LSBInitScripts
 
 talk to someone at Roku, Sonos, Slim Devices, etc...they would know
 about making bulletproof little appliances
+
+for init.d stuff:
+
+see http://www.stuffaboutcode.com/2012/06/raspberry-pi-run-program-at-start-up.html
+http://blog.scphillips.com/2013/07/getting-a-python-script-to-run-in-the-background-as-a-service-on-boot/
+
+Comprehensive daemonizing of a python script:
+https://github.com/nicholasdavidson/pybit
+https://pypi.python.org/pypi/python-daemon/
+http://www.gavinj.net/2012/06/building-python-daemon-process.html
+
