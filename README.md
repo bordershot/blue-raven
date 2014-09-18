@@ -1,7 +1,7 @@
-# raven-cosm
+# blue-raven
 
 A library to connect a Rainforest Automation RAVEn Smart Meter
-interface to the weMonitor Rainforest API.  Includes a general
+interface to the BlueDot Rainforest API.  Includes a general
 thread-safe message passing framework for publish / subscribe and a
 stream-based architecture/
 
