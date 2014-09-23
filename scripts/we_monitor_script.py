@@ -46,7 +46,7 @@ def usage(argv):
 
 def toplevel():
     # configure syslog
-    syslog.openlog(ident="raven-cosm", logoption=syslog.LOG_PID)
+    syslog.openlog(ident="blue-raven", logoption=syslog.LOG_PID)
     syslog.syslog(syslog.LOG_INFO, 'starting up')
 
     # Allocate an element that broadcasts raw Rainforest packets
