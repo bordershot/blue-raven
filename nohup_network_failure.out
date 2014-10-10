@@ -1,0 +1,86 @@
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_req=1 ttl=50 time=82.4 ms
+
+--- 8.8.8.8 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 82.425/82.425/82.425/0.000 ms
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+
+--- 8.8.8.8 ping statistics ---
+1 packets transmitted, 0 received, 100% packet loss, time 0ms
+
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_req=1 ttl=50 time=105 ms
+
+--- 8.8.8.8 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 105.007/105.007/105.007/0.000 ms
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_req=1 ttl=50 time=1737 ms
+
+--- 8.8.8.8 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 1737.358/1737.358/1737.358/0.000 ms
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_req=1 ttl=50 time=65.3 ms
+
+--- 8.8.8.8 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 65.389/65.389/65.389/0.000 ms
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_req=1 ttl=50 time=163 ms
+
+--- 8.8.8.8 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 163.796/163.796/163.796/0.000 ms
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_req=1 ttl=50 time=96.1 ms
+
+--- 8.8.8.8 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 96.175/96.175/96.175/0.000 ms
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+
+--- 8.8.8.8 ping statistics ---
+1 packets transmitted, 0 received, 100% packet loss, time 0ms
+
+connect: Network is unreachable
+connect: Network is unreachable
+connect: Network is unreachable
+connect: Network is unreachable
+Exception in thread Thread-1:
+Traceback (most recent call last):
+  File "/usr/lib/python2.7/threading.py", line 552, in __bootstrap_inner
+    self.run()
+  File "/usr/lib/python2.7/threading.py", line 505, in run
+    self.__target(*self.__args, **self.__kwargs)
+  File "/home/r/Projects/blue-raven/lib/usbio.py", line 61, in run
+    self.notify(line)
+  File "/home/r/Projects/blue-raven/lib/subject.py", line 43, in notify
+    observer.update(message)
+  File "/home/r/Projects/blue-raven/lib/xml_fragment_collector.py", line 67, in update
+    self.notify(m.group(1))
+  File "/home/r/Projects/blue-raven/lib/subject.py", line 43, in notify
+    observer.update(message)
+  File "/home/r/Projects/blue-raven/lib/we_monitor_formatter.py", line 69, in update
+    self.notify(m)
+  File "/home/r/Projects/blue-raven/lib/subject.py", line 43, in notify
+    observer.update(message)
+  File "/home/r/Projects/blue-raven/lib/we_monitor_writer.py", line 59, in update
+    self.post_with_retries(self.API_PREFIX, message)
+  File "/home/r/Projects/blue-raven/lib/we_monitor_writer.py", line 65, in post_with_retries
+    self.try_post(url, body)
+  File "/home/r/Projects/blue-raven/lib/we_monitor_writer.py", line 77, in try_post
+    r = requests.post(url, data=body)
+  File "/usr/local/lib/python2.7/dist-packages/requests/api.py", line 88, in post
+    return request('post', url, data=data, **kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/requests/sessions.py", line 456, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/requests/sessions.py", line 559, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/requests/adapters.py", line 375, in send
+    raise ConnectionError(e, request=request)
+ConnectionError: HTTPSConnectionPool(host='app.wemonitorhome.com', port=443): Max retries exceeded with url: /api/rainforest-eagle (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+
