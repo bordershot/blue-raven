@@ -37,6 +37,24 @@ class XMLFragmentCollector(Subject, Observer):
     </tag_name>
     """
 
+    # BUG: If the opening tag is damaged somehow (as has been observed
+    # once in a great while), this approach will never find the closing
+    # tag.
+    #
+    # TODO: A better approach might be to acknowlege that the RAVEn
+    # emits indented XML, such as:
+    #
+    # <InstantaneousDemand>
+    #   <DeviceMacId>0x00158d00001ab152</DeviceMacId>
+    #   <MeterMacId>0x000781000028c07d</MeterMacId>
+    #   <TimeStamp>0x191868fb</TimeStamp>
+    #   ...
+    # </InstantaneousDemand>
+    # 
+    # so it would be sufficient to search for /^</ and /^<\// to
+    # find starting and ending tags.  (As an aside, if we go this
+    # route, we should rename this class "RavenFragmentCollector")
+
     def __init__(self):
         Subject.__init__(self)
         Observer.__init__(self)

@@ -49,9 +49,10 @@ import syslog
 #     </InstantaneousDemand>
 #   </rainforest>
 #
-# Note that the rainforst header derives the macID from the MeterMacId tag
-# within the message, and the timestamp is derived from the TimeStamp tag
-# within the message.
+# Note that the rainforst header derives the macID from the MeterMacId
+# tag within the message, and the timestamp is derived from the
+# TimeStamp tag within the message.  If either of those are missing,
+# no message is emitted.
 #
 
 class WeMonitorFormatter(Subject, Observer):
