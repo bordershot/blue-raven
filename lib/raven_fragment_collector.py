@@ -64,9 +64,9 @@ class RavenFragmentCollector(Subject, Observer):
         #   {line n}\n
         # </{closing tag}>{trailing trash}
 
-        # print("self.collected = " + self.collected)
+        # print("self.collected = \n" + self.collected)
         
-        m = re.search('(^|\n)(<(.*?)>((\n +.*)*)\n</(.*?)>)((.|\n)*)', self.collected)
+        m = re.search('(^|\r\n)(<(.*?)>((\r\n +.*)*)\r\n</(.*?)>)((.|\n)*)', self.collected)
         if (m):
             # print(m.groups())
 
@@ -83,3 +83,4 @@ class RavenFragmentCollector(Subject, Observer):
                 self.notify(m.group(2))
 
             self.collected = m.group(7)
+            # print("collected now = \n" + self.collected)
