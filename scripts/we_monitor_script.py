@@ -33,13 +33,13 @@ import sys
 import time
 import syslog
 
-import raven_utilities
 import commands
 import echo
+import raven_fragment_collector
+import raven_utilities
 import usbio
 import we_monitor_formatter
 import we_monitor_writer
-import xml_fragment_collector
 
 def usage(argv):
     sys.exit("USAGE:\n    python " + sys.argv[0] + "\n")
@@ -55,7 +55,7 @@ def toplevel():
     # Allocate an element that collects bits of XML until a complete XML
     # fragment (<tag>...</tag>) has been assembled.  Then broadcast the
     # fragment as a single message to its listeners.
-    xfc = xml_fragment_collector.XMLFragmentCollector()
+    rfc = raven_fragment_collector.RavenFragmentCollector()
     
     # Wrap the XML fragments in a format understood by the weMonitor API
     wmf = we_monitor_formatter.WeMonitorFormatter()
@@ -69,11 +69,11 @@ def toplevel():
     # ech = echo.Echo()
     
     # String the elements together and start the reader thread.
-    usb.attach(xfc).attach(wmf).attach(wmw) # .attach(ech)
+    usb.attach(rfc).attach(wmf).attach(wmw) # .attach(ech)
 
     # If you prefer to see the raw XML as it arrives from the USB
     # device. comment out the above line and uncomment this line.
-    # usb.attach(xfc).attach(ech).attach(wmf).attach(wmw)
+    # usb.attach(rfc).attach(ech).attach(wmf).attach(wmw)
 
     # Sending an 'initialize' message causes the RAVEn to synchronize its
     # XML output -- without that, it sends an arbitrary number of partial

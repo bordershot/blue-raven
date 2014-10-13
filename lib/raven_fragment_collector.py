@@ -52,22 +52,34 @@ class RavenFragmentCollector(Subject, Observer):
     # support for observer
 
     def update(self, message):
+        # at each call to update(), collect bits of xml...
         self.collected += message
 
-        m1 = re.search('^<\/(.*?)>', self.collected, flags=re.DOTALL)
-        if (m1):
-            tag = m1.group(1)
-            # search for last instance of ^<{tag}> in self.collected>
-            # use greedy search to consume any prior instances
-            pattern = '(.*)(^<' + tag + '>.*^<\/' + tag + '>)(.*)'
-            m2 = re.search(pattern, self.collected, flags=re.DOTALL)
-            if (m2):
-                # here:
-                #  m2.group(1) is the entire fragment of interest
-                #  m2.group(2) is trailing text (perhaps part of next fragment)
-                self.notify(m2.group(1))
-                self.collected = m2.group(2)
-            else:
-                # didn't find a match.  clear out collected string
-                self.collected = ''
+        # until we see an entire string of the form:
+        # {leading trash}\n
+        # <{opening tag}>\n
+        #   {line 1}\n
+        #   {line 2}\n
+        #   ...
+        #   {line n}\n
+        # </{closing tag}>{trailing trash}
 
+        # print("self.collected = " + self.collected)
+        
+        m = re.search('(^|\n)(<(.*?)>((\n +.*)*)\n</(.*?)>)((.|\n)*)', self.collected)
+        if (m):
+            # print(m.groups())
+
+            # group 1: leading trash (not used)
+            # group 2: complete xml fragment
+            # group 3: opening tag
+            # group 4: "body" between opening and closing tags (not used)
+            # group 5: last body line (not used)
+            # group 6: closing tag
+            # group 7: trailing trash
+            # group 8: trailing trash final char (not used)
+
+            if m.group(3) == m.group(6):
+                self.notify(m.group(2))
+
+            self.collected = m.group(7)

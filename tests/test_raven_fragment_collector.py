@@ -1,4 +1,3 @@
-82 lines (64 sloc)  3.367 kb RawBlameHistory  
 #   ================================================================
 #   Copyright (C) 2014 weMonitor, Inc.
 #  
@@ -43,9 +42,9 @@ class TestRavenFragmentCollector(unittest.TestCase):
         self.assertEqual("", tap_.lastMessage())
         raven_fragment_collector_.update("</a>\n")
         expected = """<a>
-  <x>x<x>
-  <y>y<y>
-  <z>z<z>
+  <x>x</x>
+  <y>y</y>
+  <z>z</z>
 </a>"""
         self.assertEqual(expected, tap_.lastMessage())
 
@@ -65,9 +64,9 @@ class TestRavenFragmentCollector(unittest.TestCase):
         self.assertEqual("", tap_.lastMessage())
         raven_fragment_collector_.update("</a>\n")
         expected = """<a>
-  <x>x<x>
-  <y>y<y>
-  <z>z<z>
+  <x>x</x>
+  <y>y</y>
+  <z>z</z>
 </a>"""
         self.assertEqual(expected, tap_.lastMessage())
 
