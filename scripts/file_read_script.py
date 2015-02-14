@@ -26,7 +26,7 @@ Script to read XML from a file and process it, doing everything
 except sending it to the weMonitor servers.  Useful for debugging.
 
 SYNOPSIS:
-    python file_read_script.py file_name.xml
+    PYTHONPATH=./lib python file_read_script.py file_name.xml
 """
 
 import sys

@@ -45,7 +45,7 @@ port = "/dev/ttyUSB0"
 
 if len(sys.argv) == 2:
     port = sys.argv[1]
-else if len(sys.argv) > 2:
+elif len(sys.argv) > 2:
     usage(sys.argv)
 
 

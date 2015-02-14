@@ -27,7 +27,7 @@ interface and capture the raw XML to a file.  This is a useful
 debugging tool when used in conjunction with file_reader.py,
 
 SYNOPSIS:
-    python file_write_script.py file_name.xml
+    PYTHONPATH=./lib python file_write_script.py file_name.xml
 """
 
 import sys
