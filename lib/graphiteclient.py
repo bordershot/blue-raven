@@ -9,7 +9,7 @@ server='192.168.37.25'
 port=2003
 proto='udp'
 
-dataToGather = { 'SummationDelivered':'get_current_summation_delivered', 'Demand':'get_instantaneous_demand', 'SummationReceived':'get_current_summation_delivered', 'CurrentUsage':'get_current_period_usage' }
+dataToGather = [ 'SummationDelivered', 'Demand', 'SummationReceived', 'CurrentUsage' ]
 
 class upload_to_graphite(Subject, Observer):
 
@@ -64,10 +64,9 @@ class upload_to_graphite(Subject, Observer):
         tcp_output = ""
 
         xmltree = ET.fromstring(message)
-        for k,v in dataToGather.iteritems():
+        for k in dataToGather.iteritems():
             if xmltree.find(k) is not None:
                 tcp_output += "power." + str(k) + " " + self.getValue(xmltree, k) + " " + str(timestamp) + "\n"
-        #print tcp_output
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             s.connect((server, port))   # tuple of (servername, port)
@@ -78,6 +77,4 @@ class upload_to_graphite(Subject, Observer):
                              str(sys.exc_info()[0]))
             pass
 
-        #print message,
-        #sys.stdout.flush()
         self.notify(message)
