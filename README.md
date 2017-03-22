@@ -5,6 +5,11 @@ interface to the BlueDot Rainforest API.  Includes a general
 thread-safe message passing framework for publish / subscribe and a
 stream-based architecture/
 
+MASHUP of https://github.com/frankp/python-raven and blue-raven with
+graphite uploader
+
+systemd unit file included for startup
+
 ## TODO
 
 ### add documentation
