@@ -23,7 +23,7 @@
 
 """
 Driver script to read from a Rainforest Automation RAVEN smart meter
-interface and push the data to the weMonitor Rainforest API.
+interface and push the data to a graphite server.
 
 SYNOPSIS:
     PYTHONPATH=./lib nohup python scripts/graphite_script.py &
