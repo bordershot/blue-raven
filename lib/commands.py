@@ -119,13 +119,16 @@ def get_network_info():
 # Simple Metering Feature
 
 # Command: GET_INSTANTANEOUS_DEMAND
-# TODO
+def get_instantaneous_demand():
+    return _prepare("get_instantaneous_demand")
 
 # Command: GET_CURRENT_SUMMATION_DELIVERED
-# TODO
+def get_current_summation_delivered():
+    return _prepare("get_current_summation_delivered")
 
 # Command: GET_CURRENT_PERIOD_USAGE
-# TODO
+def get_current_period_usage():
+    return _prepare("get_current_period_usage")
 
 # Command: GET_LAST_PERIOD_USAGE
 # TODO

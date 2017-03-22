@@ -1,0 +1,9 @@
+[Unit]
+Description=Raven EMU Reader and Writer to Graphite
+
+[Service]
+User=pi
+Group=pi
+WorkingDirectory=/home/pi/blue-raven
+ExecStart=PYTHONPATH=./lib /usr/bin/python scripts/graphite_script.py
+Restart=on-failure
